@@ -44,6 +44,11 @@
         .unpaid {
             color: red;
         }
+        #totals {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -59,10 +64,10 @@
 
         <label for="penaltyType">Strafenkatalog:</label>
         <select id="penaltyType">
-            <option value="10">Zu spät zum Training (10€)</option>
-            <option value="20">Unpünktlich zum Spiel (20€)</option>
-            <option value="30">Unsportliches Verhalten (30€)</option>
-            <option value="50">Rote Karte (50€)</option>
+            <option value="10">Zu spät zum Training (10.-)</option>
+ 	    <option value="20">Nicht Abmelden Training (20.-)</option>
+            <option value="50">Unpünktlich zum Spiel (50.-)</option>
+            <option value="100">Nicht Abmelden Spiel (100.-)</option>
         </select><br>
 
         <label for="penaltyDate">Datum der Strafe:</label>
@@ -78,9 +83,10 @@
             <tr>
                 <th>Spieler</th>
                 <th>Strafe</th>
-                <th>Betrag (€)</th>
+                <th>Betrag (CHF)</th>
                 <th>Datum</th>
                 <th>Status</th>
+                <th>Bezahl-Datum</th>
                 <th>Aktion</th>
             </tr>
         </thead>
@@ -89,12 +95,25 @@
         </tbody>
     </table>
 
+    <!-- Gesamtbetrag der Strafen -->
+    <div id="totals">
+        <p>Offene Strafen: <span id="totalUnpaid">0</span> CHF</p>
+        <p>Bezahlte Strafen: <span id="totalPaid">0</span> CHF</p>
+    </div>
+
     <script>
+        let totalUnpaid = 0;
+        let totalPaid = 0;
+
+        function updateTotals() {
+            document.getElementById('totalUnpaid').textContent = totalUnpaid;
+            document.getElementById('totalPaid').textContent = totalPaid;
+        }
+
         function addPenalty() {
-            // Eingabewerte holen
             const playerName = document.getElementById('playerName').value;
             const penaltyType = document.getElementById('penaltyType');
-            const penaltyAmount = penaltyType.value;
+            const penaltyAmount = parseInt(penaltyType.value);
             const penaltyDescription = penaltyType.options[penaltyType.selectedIndex].text;
             const penaltyDate = document.getElementById('penaltyDate').value;
 
@@ -107,22 +126,61 @@
             const table = document.getElementById('penaltyTable').getElementsByTagName('tbody')[0];
             const newRow = table.insertRow();
 
-            // Zellen für die neue Zeile
             const playerCell = newRow.insertCell(0);
             const penaltyCell = newRow.insertCell(1);
             const amountCell = newRow.insertCell(2);
             const dateCell = newRow.insertCell(3);
             const statusCell = newRow.insertCell(4);
-            const actionCell = newRow.insertCell(5);
+            const paidDateCell = newRow.insertCell(5);
+            const actionCell = newRow.insertCell(6);
 
-            // Inhalte setzen
             playerCell.textContent = playerName;
             penaltyCell.textContent = penaltyDescription;
             amountCell.textContent = penaltyAmount;
             dateCell.textContent = penaltyDate;
             statusCell.innerHTML = `<span class="unpaid">Offen</span>`;
+            paidDateCell.innerHTML = `<input type="date" id="paidDateInput" placeholder="Bezahl-Datum">`;
 
-            // "Bezahlt"-Button hinzufügen
+            // Offene Strafen aktualisieren
+            totalUnpaid += penaltyAmount;
+            updateTotals();
+
+            // "Bezahlt"-Button
             const payButton = document.createElement('button');
             payButton.textContent = "Bezahlt";
-            payButton
+            payButton.onclick = function () {
+                const paidDateInput = paidDateCell.querySelector('input');
+                const paidDate = paidDateInput.value;
+
+                if (paidDate === "") {
+                    alert("Bitte ein Bezahl-Datum eingeben.");
+                    return;
+                }
+
+                // Pop-up zur Passwortabfrage
+                const password = prompt("Bitte das Passwort eingeben:");
+                if (password !== "FCE") {
+                    alert("Falsches Passwort!");
+                    return;
+                }
+
+                // Status und Beträge aktualisieren
+                statusCell.innerHTML = `<span class="paid">Bezahlt</span>`;
+                totalUnpaid -= penaltyAmount;
+                totalPaid += penaltyAmount;
+                updateTotals();
+
+                // Bezahl-Datum setzen und Button deaktivieren
+                paidDateInput.disabled = true;
+                payButton.disabled = true;
+            };
+
+            actionCell.appendChild(payButton);
+
+            // Formular zurücksetzen
+            document.getElementById('penaltyForm').reset();
+        }
+    </script>
+
+</body>
+</html>
