@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fussball Club - Strafenmanagement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        form, table {
+            background-color: #fff;
+            padding: 15px;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, select, button {
+            margin: 10px 0;
+            padding: 8px;
+            font-size: 16px;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
+        .paid {
+            color: green;
+        }
+        .unpaid {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Fussball Club - Strafenverwaltung</h1>
+
+    <!-- Formular zur Spieler- und Strafen-Eingabe -->
+    <form id="penaltyForm">
+        <h2>Strafe einem Spieler zuweisen</h2>
+        
+        <label for="playerName">Spielername:</label>
+        <input type="text" id="playerName" placeholder="Name des Spielers" required><br>
+
+        <label for="penaltyType">Strafenkatalog:</label>
+        <select id="penaltyType">
+            <option value="10">Zu spät zum Training (10€)</option>
+            <option value="20">Unpünktlich zum Spiel (20€)</option>
+            <option value="30">Unsportliches Verhalten (30€)</option>
+            <option value="50">Rote Karte (50€)</option>
+        </select><br>
+
+        <label for="penaltyDate">Datum der Strafe:</label>
+        <input type="date" id="penaltyDate" required><br>
+
+        <button type="button" onclick="addPenalty()">Strafe hinzufügen</button>
+    </form>
+
+    <!-- Tabelle zur Anzeige der Strafen -->
+    <h2>Übersicht der Strafen</h2>
+    <table id="penaltyTable">
+        <thead>
+            <tr>
+                <th>Spieler</th>
+                <th>Strafe</th>
+                <th>Betrag (€)</th>
+                <th>Datum</th>
+                <th>Status</th>
+                <th>Aktion</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Strafen werden hier dynamisch hinzugefügt -->
+        </tbody>
+    </table>
+
+    <script>
+        function addPenalty() {
+            // Eingabewerte holen
+            const playerName = document.getElementById('playerName').value;
+            const penaltyType = document.getElementById('penaltyType');
+            const penaltyAmount = penaltyType.value;
+            const penaltyDescription = penaltyType.options[penaltyType.selectedIndex].text;
+            const penaltyDate = document.getElementById('penaltyDate').value;
+
+            if (playerName === "" || penaltyDate === "") {
+                alert("Bitte alle Felder ausfüllen.");
+                return;
+            }
+
+            // Neue Zeile in der Tabelle erstellen
+            const table = document.getElementById('penaltyTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+
+            // Zellen für die neue Zeile
+            const playerCell = newRow.insertCell(0);
+            const penaltyCell = newRow.insertCell(1);
+            const amountCell = newRow.insertCell(2);
+            const dateCell = newRow.insertCell(3);
+            const statusCell = newRow.insertCell(4);
+            const actionCell = newRow.insertCell(5);
+
+            // Inhalte setzen
+            playerCell.textContent = playerName;
+            penaltyCell.textContent = penaltyDescription;
+            amountCell.textContent = penaltyAmount;
+            dateCell.textContent = penaltyDate;
+            statusCell.innerHTML = `<span class="unpaid">Offen</span>`;
+
+            // "Bezahlt"-Button hinzufügen
+            const payButton = document.createElement('button');
+            payButton.textContent = "Bezahlt";
+            payButton
