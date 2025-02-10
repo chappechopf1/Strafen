@@ -3,75 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fussball Club - Strafenmanagement</title>
+    <title>FC Elgg - Strafenmanagement</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f3f3f3;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
             padding: 20px;
             text-align: center;
         }
+
         h1 {
-            color: #333;
+            color: #2c3e50;
+            font-size: 36px;
         }
+
+        h2 {
+            color: #34495e;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        #logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
         form, table {
-            background-color: #fff;
-            padding: 15px;
+            background-color: #ffffff;
+            padding: 20px;
             margin: 20px auto;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
         }
+
         input, select, button {
             margin: 10px 0;
-            padding: 8px;
-            font-size: 16px;
-        }
-        table {
-            width: 80%;
-            border-collapse: collapse;
-        }
-        th, td {
             padding: 10px;
-            border: 1px solid #ddd;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
         }
+
+        button {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #3498db;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
         th {
-            background-color: #333;
+            background-color: #2980b9;
             color: white;
         }
+
         .paid {
             color: green;
+            font-weight: bold;
         }
+
         .unpaid {
             color: red;
+            font-weight: bold;
         }
+
         #totals {
             margin-top: 20px;
             font-size: 18px;
             font-weight: bold;
+            color: #2c3e50;
+        }
+
+        #totals p {
+            margin: 5px 0;
         }
     </style>
 </head>
 <body>
 
-    <h1>Fussball Club - Strafenverwaltung</h1>
-
+    <h1>FC Elgg - Strafenverwaltung</h1>
+    <img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Elgg-blazon.svg/1200px-Elgg-blazon.svg.png" alt="FC Elgg Wappen">
+    
     <!-- Formular zur Spieler- und Strafen-Eingabe -->
     <form id="penaltyForm">
         <h2>Strafe einem Spieler zuweisen</h2>
-        
+
         <label for="playerName">Spielername:</label>
-        <input type="text" id="playerName" placeholder="Name des Spielers" required><br>
+        <input type="text" id="playerName" placeholder="Name des Spielers" required>
 
         <label for="penaltyType">Strafenkatalog:</label>
         <select id="penaltyType">
             <option value="10">Zu spät zum Training (10.-)</option>
- 	    <option value="20">Nicht Abmelden Training (20.-)</option>
+            <option value="20">Nicht Abmelden Training (20.-)</option>
             <option value="50">Unpünktlich zum Spiel (50.-)</option>
             <option value="100">Nicht Abmelden Spiel (100.-)</option>
-        </select><br>
+        </select>
 
         <label for="penaltyDate">Datum der Strafe:</label>
-        <input type="date" id="penaltyDate" required><br>
+        <input type="date" id="penaltyDate" required>
 
         <button type="button" onclick="addPenalty()">Strafe hinzufügen</button>
     </form>
